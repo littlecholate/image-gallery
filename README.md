@@ -39,9 +39,9 @@ CREATE TABLE public.media_list (
 ```
 
 #### 3. Environment Variables
-Create a .env.local file in the root of your Next.js project and add your Supabase credentials.
-NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+Create a .env.local file in the root of your Next.js project and add your Supabase credentials.<br>
+NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL<br>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY<br>
 
 #### 4. Use the Component
 Install Supabase JS client: ```npm install @supabase/supabase-js```.
