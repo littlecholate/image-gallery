@@ -2,10 +2,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabaseClient';
 import { Search, ChevronsUp, RotateCw, ChevronRight, ChevronLeft } from 'lucide-react';
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 // Hook for Debouncing - delay an action until the user has stopped typing for a specific amount of time
 const useDebounce = (value, delay) => {
@@ -187,6 +185,7 @@ const Gallery = () => {
 
     // When the modal is open, it sets overflow: 'hidden' on the <body> element to prevent the background from scrolling
     useEffect(() => {
+        setShowScrollTopButton(false);
         document.body.style.overflow = selectedImage ? 'hidden' : 'auto';
         return () => {
             document.body.style.overflow = 'auto';
@@ -269,22 +268,26 @@ const Gallery = () => {
                 <div className="flex flex-row gap-4">
                     {columns.map((columnImages, colIndex) => (
                         <div key={colIndex} className="flex flex-col gap-4 w-full">
-                            {columnImages.map((image) => (
-                                <div
-                                    key={image.id}
-                                    className="break-inside-avoid overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer"
-                                    onClick={() => setSelectedImage(image)}
-                                >
-                                    <Image
-                                        src={image.url}
-                                        alt={image.title}
-                                        width={image.width}
-                                        height={image.height}
-                                        className="w-full h-auto object-cover transition-opacity duration-300 ease-in-out hover:opacity-75"
-                                        sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                                    />
-                                </div>
-                            ))}
+                            {columnImages.map((image, imageIndex) => {
+                                const overallIndex = imageIndex * numColumns + colIndex;
+                                return (
+                                    <div
+                                        key={image.id}
+                                        className="break-inside-avoid overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out cursor-pointer"
+                                        onClick={() => setSelectedImage(image)}
+                                    >
+                                        <Image
+                                            src={image.url}
+                                            alt={image.title}
+                                            width={image.width}
+                                            height={image.height}
+                                            className="w-full h-auto object-cover transition-opacity duration-300 ease-in-out hover:opacity-75"
+                                            sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                                            priority={overallIndex < 7}
+                                        />
+                                    </div>
+                                );
+                            })}
                         </div>
                     ))}
                 </div>
